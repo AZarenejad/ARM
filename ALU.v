@@ -3,7 +3,7 @@ module ALU(input [31:0] alu_in1, alu_in2, input [3:0] alu_command, input cin,
     
     wire z, n;
     reg v, cout;
-    assign statusRegister = {z, cout, n, v};
+    assign status_register = {z, cout, n, v};
 
     assign z = (alu_out == 8'b0 ? 1 : 0);
     assign n = alu_out[31];

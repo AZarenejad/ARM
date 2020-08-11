@@ -1,10 +1,10 @@
 
-module instruction_memory(input clk, rst, mem_read, mem_write, input[31:0] address, Write_data,  output[31:0] read_data);
+module instruction_memory(input clk, rst, mem_read, mem_write, input[31:0] address, write_data,  output[31:0] read_data);
 	integer counter = 0;
 
 	reg [31:0] read_data_temp;
 
-	assign Read_data = read_data_temp;
+	assign read_data = read_data_temp;
 	reg[7:0] data[0:255];
 
 	always @(*) begin

@@ -15,7 +15,7 @@ module IF_Stage(input clk, rst, freeze, branch_taken, input[31:0] branchAddr, ou
 	assign instruction = read_data;
 
 	instruction_memory instruction_mem(.clk(clk), .rst(rst), .address(pc_out),
-                                    .Write_data(instruction_write_data), .mem_read(1'b1),
+                                    .write_data(instruction_write_data), .mem_read(1'b1),
                                     .mem_write(1'b0), .read_data(read_data));
 	
 endmodule
