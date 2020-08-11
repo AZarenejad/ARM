@@ -40,7 +40,7 @@ module EXE_stage_module(
 
             .wb_en_out(wb_en_middle), .mem_r_en_out(mem_r_en_middle), .mem_w_en_out(mem_w_en_middle), .dest_out(dest_middle),
             .alu_res(alu_res_middle), .val_Rm_out(val_Rm_middle), .status_w_en_out(status_w_en_out),
-            .branch_taken_out(branch_taken_middle), .statusRegister(statusRegister_out), .branch_address(branch_address_out)
+            .branch_taken_out(branch_taken_middle), .status_register(status_register_out), .branch_address(branch_address_out)
 	);
 
     EXE_stage_register exe_stage_reg( .clk(clk), .rst(rst), .freeze(freeze), .wb_en_in(wb_en_middle),

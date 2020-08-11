@@ -18,7 +18,7 @@ module MEM_stage_module( input clk, rst, freeze, wb_en_in, mem_r_en_in, mem_w_en
             .wb_en_out(wb_en_middle), .mem_r_en_out(mem_r_en_middle), .mem_out(mem_res_middle), .alu_res_out(alu_res_middle),
             .dest_out(dest_middle), .ready(ready));
 
-    MEM_stage_register mem_stage_reg(.clk(clk), .rst(rst), .freeze(freeze), .wb_en_in(wb_en_middle),
+    mem_stage_register mem_stage_reg(.clk(clk), .rst(rst), .freeze(freeze), .wb_en_in(wb_en_middle),
                                 .mem_r_en_in(mem_r_en_middle), .alu_res_in(alu_res_middle),
                                 .mem_res_in(mem_res_middle), .dest_in(dest_middle),
                                 .wb_en_out(wb_en_out), .mem_r_en_out(mem_r_en_out), .alu_res_out(alu_res_out),

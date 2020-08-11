@@ -93,7 +93,7 @@ module arm(
         // inputs
         .clk(clk),
         .rst(rst),
-        .freeza(~MEM_ready),
+        .freeze(~MEM_ready),
         .pc_in(PC_ID),
         .wb_en_in(wb_enable_ID_out),
         .mem_r_en_in(mem_read_ID_out),
@@ -123,7 +123,7 @@ module arm(
         .dest_hazard_in(dest_hazard_EXE_out),
         .status_w_en_out(status_w_en_EXE_out),
         .branch_taken_out(branch_taken_EXE_out),
-        .statusRegister_out(status_reg_EXE_out),
+        .status_register_out(status_reg_EXE_out),
         .branch_address_out(branch_address)
     );
 
@@ -186,7 +186,7 @@ module arm(
         .hazard_detected(hazard_detected)
     );
 
-    Forwarding forwarding(
+    forwarding forwarding(
         .en_forwarding(en_forwarding),
         .ID_src1(staged_reg_file_ID_out1),
         .ID_src2(staged_reg_file_ID_out2),

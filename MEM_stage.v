@@ -1,5 +1,5 @@
 
-module MEM_Stage(input clk, rst,
+module MEM_stage(input clk, rst,
 	input wb_en_in, mem_r_en_in, mem_w_en_in,
 	input [31:0] alu_res_in, val_Rm,
 	input [3:0] dest_in,

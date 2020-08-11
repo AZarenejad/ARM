@@ -1,4 +1,4 @@
-module ID_Stage_module(
+module ID_stage_module(
 		input clk,
 		input rst,
 		input flush,
@@ -81,7 +81,7 @@ module ID_Stage_module(
 		.flush(flush),
 		.freeze(freeze),
 	
-		.PC_in(PC_middle),			
+		.pc_in(PC_middle),			
 		.mem_read_en_in(mem_read_en_middle),
 		.mem_write_en_in(mem_write_en_middle),
 		.wb_enable_in(wb_enable_middle),

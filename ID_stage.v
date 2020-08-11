@@ -90,7 +90,7 @@ module ID_stage(
 	multiplexer_2_to_1 #(.WORD_LENGTH(4 + 6)) control_unit_mux(
 			 .in1(control_unit_mux_in), .in2(10'b0),
 			 .sel1(~control_unit_mux_enable),
-			 .se2(control_unit_mux_enable),
+			 .sel2(control_unit_mux_enable),
 			 .out(control_unit_mux_out));
 	
 	assign {execute_command_out, mem_read_en_out, mem_write_en_out, immediate_out, wb_enable_out,

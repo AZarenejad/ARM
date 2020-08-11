@@ -1,4 +1,4 @@
-module EX_Stage(
+module EXE_stage(
 	input clk, rst, wb_en_in, mem_r_en_in, mem_w_en_in, status_w_en_in, branch_taken_in, immd,
     input[31:0] pc_in,
 	input [3:0] exe_cmd,
