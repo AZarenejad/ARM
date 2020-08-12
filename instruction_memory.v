@@ -1,5 +1,5 @@
 
-module instruction_memory(input clk, rst, mem_read, mem_write, input[31:0] address, write_data,  output[31:0] read_data);
+module instruction_memory(input clk, rst, mem_read, input[31:0] address, output[31:0] read_data);
 	integer counter = 0;
 
 	reg [31:0] read_data_temp;
@@ -9,11 +9,9 @@ module instruction_memory(input clk, rst, mem_read, mem_write, input[31:0] addre
 
 	always @(*) begin
 		if (rst) begin
-			data[0] <= 8'b11100000;
-			data[1] <= 8'b00000000;
-			data[2] <= 8'b00000000;
-			data[3] <= 8'b00000000;
-			
+
+			{data[0], data[1], data[2], data[3]} = 32'b11100000_00000000_00000000_00000000;
+
 			{data[4], data[5], data[6], data[7]} = 32'b1110_00_1_1101_0_0000_0000_000000010100; //MOV R0 ,#20 //R0 = 20
 			{data[8], data[9], data[10], data[11]} = 32'b1110_00_1_1101_0_0000_0001_101000000001; //MOV R1 ,#4096 //R1 = 4096
 			{data[12], data[13], data[14], data[15]} = 32'b1110_00_1_1101_0_0000_0010_000100000011; //MOV R2 ,#0xC0000000 //R2 = -1073741824
@@ -71,25 +69,14 @@ module instruction_memory(input clk, rst, mem_read, mem_write, input[31:0] addre
 			{data[192], data[193], data[194], data[195]} = 32'b1110_10_1_0_111111111111111111111111 ; //B
 
 			
-			data[196] <= 8'b11100000;
-			data[197] <= 8'b00000000;
-			data[198] <= 8'b00000000;
-			data[199] <= 8'b00000000;
-					
-			data[200] <= 8'b11100000;
-			data[201] <= 8'b00000000;
-			data[202] <= 8'b00000000;
-			data[203] <= 8'b00000000;
-			
-			data[204] <= 8'b11100000;
-			data[205] <= 8'b00000000;
-			data[206] <= 8'b00000000;
-			data[207] <= 8'b00000000;
 
-			data[208] <= 8'b11100000;
-			data[209] <= 8'b00000000;
-			data[210] <= 8'b00000000;
-			data[211] <= 8'b00000000;
+			{data[196], data[197], data[198], data[199]} = 32'b11100000_00000000_00000000_00000000;
+
+			{data[200], data[201], data[202], data[203]} = 32'b11100000_00000000_00000000_00000000;
+	
+			{data[204], data[205], data[206], data[207]} = 32'b11100000_00000000_00000000_00000000;
+		
+			{data[208], data[209], data[210], data[211]} = 32'b11100000_00000000_00000000_00000000;
 	
 		end
 		else if (mem_read) begin
