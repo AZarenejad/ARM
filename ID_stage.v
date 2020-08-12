@@ -161,7 +161,7 @@ module ID_stage_module(input clk, rst, flush, freeze, reg_file_wb_en, hazard,
 	assign src1_addr_middle = reg_file_first_src_out;
 	assign src2_addr_middle = reg_file_second_src_out;
 		
-	ID_stage_register ID_stage_reg(.clk(clk), .rst(rst), .flush(flush), .freeze(freeze), .pc_in(PC_middle), 
+	ID_stage_register ID_stage_reg(.clk(clk), .rst(rst), .flush(flush), .freeze(freeze), .pc_in(pc_middle), 
 	.mem_read_en_in(mem_read_en_middle), .mem_write_en_in(mem_write_en_middle), .wb_enable_in(wb_enable_middle),
 	.immediate_in(immediate_middle), .branch_taken_in(branch_taken_middle), .status_write_enable_in(status_write_enable_middle),
 	.execute_command_in(execute_command_middle), .reg_file_in1(reg_file_middle1),
