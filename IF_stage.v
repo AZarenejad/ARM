@@ -19,3 +19,47 @@ module IF_Stage(input clk, rst, freeze, branch_taken, input[31:0] branchAddr, ou
                                     .mem_write(1'b0), .read_data(read_data));
 	
 endmodule
+
+
+module IF_stage_register (input clk, rst, freeze, flush,
+	input[31:0] pc_in, instruction_in,
+	output wire[31:0] pc, instruction
+);
+
+flush_register #(.WORD_LENGTH(32)) reg_pc_in(.clk(clk), .rst(rst), .flush(flush),
+		.ld(~freeze), .in(pc_in), .out(pc));
+
+flush_register #(.WORD_LENGTH(32)) reg_instruction(.clk(clk), .rst(rst), .flush(flush),
+		.ld(~freeze), .in(instruction_in), .out(instruction));
+
+endmodule
+
+
+module IF_stage_module(input clk, rst, freeze_in, branch_taken_in, flush_in, input[31:0] branchAddr_in,
+    output wire [31:0] pc_out, instruction_out
+);
+	wire [31:0] pc_middle;
+	wire [31:0] instruction_middle;
+
+    IF_Stage IF_stage(
+            .clk(clk),
+            .rst(rst),
+            .freeze(freeze_in),
+            .branch_taken(branch_taken_in),
+            .branchAddr(branchAddr_in),
+        	.pc(pc_middle),
+	        .instruction(instruction_middle)
+    );
+
+    IF_stage_register IF_stage_reg(
+            .clk(clk),
+            .rst(rst),
+            .freeze(freeze_in),
+            .flush(flush_in),
+            .pc_in(pc_middle),
+            .instruction_in(instruction_middle),
+            .pc(pc_out),
+            .instruction(instruction_out)
+    );
+
+endmodule
