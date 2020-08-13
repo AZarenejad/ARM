@@ -12,7 +12,7 @@ module register_file(input clk, rst, input [3:0] src1, src2, dest_wb, input[31:0
 			for(counter=0; counter < 16; counter=counter+1)
 				data[counter] <= counter;
         end
-        else if (write_back_en) data[dest_wb] = result_wb;
+        else if (write_back_en) data[dest_wb] <= result_wb;
 	end
 
 endmodule
