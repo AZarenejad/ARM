@@ -6,7 +6,8 @@ module IF_Stage(input clk, rst, freeze, branch_taken, input[31:0] branchAddr, ou
 
     adder #(.WORD_LENGTH(32)) pc_adder(.in1(pc_out), .in2(4), .out(pc));
 
-    multiplexer_2_to_1 #(.WORD_LENGTH(32)) pc_multiplexer(.in1(pc), .in2(branchAddr), .sel1(~branch_taken), .sel2(branch_taken), .out(pc_in));
+    multiplexer_2_to_1 #(.WORD_LENGTH(32)) pc_multiplexer(.in1(pc), .in2(branchAddr), .sel1(~branch_taken), .sel2(branch_taken),
+    .out(pc_in));
 
 	instruction_memory instruction_mem(.clk(clk), .rst(rst), .address(pc_out), .mem_read(1'b1), .read_data(instruction));
 	

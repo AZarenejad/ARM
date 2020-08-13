@@ -1,12 +1,6 @@
-module hazard_detection_unit (
-    input with_forwarding,
-    input have_two_src, ignore_hazard, 
-    input ignore_from_forwarding,
-    input EXE_mem_read_en,
-    input [3:0] src1_address, src2_address,
-    input [3:0] exe_wb_dest, mem_wb_dest,
-    input exe_wb_en, mem_wb_en,
-    output hazard_detected);
+module hazard_detection_unit (input with_forwarding, input have_two_src, ignore_hazard, 
+    input ignore_from_forwarding, input EXE_mem_read_en, input [3:0] src1_address, src2_address, input [3:0] exe_wb_dest, mem_wb_dest,
+    input exe_wb_en, mem_wb_en,  output hazard_detected);
     
     wire internal_hazard_with_forwarding;
     wire internal_hazard_without_forwarding;

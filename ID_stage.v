@@ -57,8 +57,7 @@ module ID_stage(input rst, clk, reg_file_wb_en, hazard, input[31:0] pc_in, instr
 	assign control_unit_mux_enable = hazard | (~cond_state);
 	
 	// Number of control signals = 6
-	// @TODO: Check the control_unit_mux_enable
-	multiplexer_2_to_1 #(.WORD_LENGTH(4 + 6)) control_unit_mux(.in1(control_unit_mux_in), .in2(10'b0), .sel1(~control_unit_mux_enable),
+	multiplexer_2_to_1 #(.WORD_LENGTH(10)) control_unit_mux(.in1(control_unit_mux_in), .in2(10'b0), .sel1(~control_unit_mux_enable),
 			.sel2(control_unit_mux_enable), .out(control_unit_mux_out));
 	
 	assign {execute_command_out, mem_read_en_out, mem_write_en_out, immediate_out, wb_enable_out,
@@ -66,8 +65,7 @@ module ID_stage(input rst, clk, reg_file_wb_en, hazard, input[31:0] pc_in, instr
 	
 	assign pc = pc_in;
 	
-	// @TODO: Change this name
-	// @TODO: Check the operands: mem_write_en_out or mem_write
+	
 	// instruction[25] ==> I
 	assign two_src = (~instruction_in[25]) | mem_write_en_out;
 	assign shift_operand = instruction_in[11:0];
