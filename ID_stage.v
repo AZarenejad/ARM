@@ -39,9 +39,8 @@ module ID_stage(input rst, clk, reg_file_wb_en, hazard, input[31:0] pc_in, instr
 	
 	// Register file
 	register_file register_file(.clk(clk), .rst(rst), .src1(reg_file_src1), .src2(reg_file_src2),
-		.dest_wb(reg_file_wb_address), .result_wb(reg_file_wb_data), .write_back_en(reg_file_wb_en),
-		.reg1(reg_file_out1), .reg2(reg_file_out2)
-	);
+	.dest_wb(reg_file_wb_address), .result_wb(reg_file_wb_data), .write_back_en(reg_file_wb_en),
+	.reg1(reg_file_out1), .reg2(reg_file_out2));
 	
 	// Conditional Check
 	// Instruction[31:28] ==> cond
@@ -71,19 +70,13 @@ module ID_stage(input rst, clk, reg_file_wb_en, hazard, input[31:0] pc_in, instr
 endmodule
 
 
-module ID_stage_register( input clk, rst, freeze, flush,
-	input mem_read_en_in, mem_write_en_in, wb_enable_in, immediate_in, branch_taken_in, status_write_enable_in,
-	input [31:0] pc_in, reg_file_in1, reg_file_in2,			
+module ID_stage_register( input clk, rst, freeze, flush, input mem_read_en_in, mem_write_en_in, wb_enable_in, immediate_in,
+	branch_taken_in, status_write_enable_in, input [31:0] pc_in, reg_file_in1, reg_file_in2,			
 	input [3:0] execute_command_in, dest_reg_in, status_reg_in, src1_addr_in, src2_addr_in,
-	input [23:0] signed_immediate_in,
-	input [11:0] shift_operand_in,
-
-	output wire mem_read_en_out, mem_write_en_out, wb_enable_out, immediate_out, branch_taken_out, status_write_enable_out,
-	output wire [31:0] pc_out, reg_file_out1, reg_file_out2,
+	input [23:0] signed_immediate_in, input [11:0] shift_operand_in, output wire mem_read_en_out, mem_write_en_out, wb_enable_out,
+	immediate_out, branch_taken_out, status_write_enable_out, output wire [31:0] pc_out, reg_file_out1, reg_file_out2,
 	output wire [3: 0] execute_command_out, dest_reg_out, status_reg_out, src1_addr_out, src2_addr_out,
-	output wire [23:0] signed_immediate_out,
-	output wire [11:0] shift_operand_out
-);
+	output wire [23:0] signed_immediate_out, output wire [11:0] shift_operand_out);
 
 flush_register #(.WORD_LENGTH(32)) id_exe_reg_pc_in(.clk(clk), .rst(rst), .flush(flush), .ld(~freeze), .in(pc_in), .out(pc_out));
 
@@ -133,33 +126,33 @@ module ID_stage_module(input clk, rst, flush, freeze, reg_file_wb_en, hazard,
 
 	wire mem_read_en_middle, mem_write_en_middle, wb_enable_middle, immediate_middle, branch_taken_middle, status_write_enable_middle;
 		
-	wire [3: 0] execute_command_middle;
-	wire [31:0] reg_file_middle1, reg_file_middle2;
-	wire [3:0] dest_reg_middle;
-	wire [23:0] signed_immediate_middle;
-	wire [11:0] shift_operand_middle;
-	wire [3:0] src1_addr_middle, src2_addr_middle;
+	wire [3: 0] execute_command_temp;
+	wire [31:0] reg_file_temp1, reg_file_temp2;
+	wire [3:0] dest_reg_temp;
+	wire [23:0] signed_immediate_temp;
+	wire [11:0] shift_operand_temp;
+	wire [3:0] src1_addr_temp, src2_addr_temp;
 
 	ID_stage ID_stage( .clk(clk), .rst(rst), .pc_in(pc_in), .instruction_in(instruction_in), .status_register(status_reg_in), 
 	.reg_file_wb_data(reg_file_wb_data), .reg_file_wb_address(reg_file_wb_address), .reg_file_wb_en(reg_file_wb_en), .hazard(hazard),
 	.pc(pc_middle), .mem_read_en_out(mem_read_en_middle), .mem_write_en_out(mem_write_en_middle),
 	.wb_enable_out(wb_enable_middle), .immediate_out(immediate_middle), .branch_taken_out(branch_taken_middle),
-	.status_write_enable_out(status_write_enable_middle), .execute_command_out(execute_command_middle),
-	.reg_file_out1(reg_file_middle1), .reg_file_out2(reg_file_middle2), .dest_reg_out(dest_reg_middle),
-	.signed_immediate(signed_immediate_middle), .shift_operand(shift_operand_middle), .two_src(two_src_out),
+	.status_write_enable_out(status_write_enable_middle), .execute_command_out(execute_command_temp),
+	.reg_file_out1(reg_file_temp1), .reg_file_out2(reg_file_temp2), .dest_reg_out(dest_reg_temp),
+	.signed_immediate(signed_immediate_temp), .shift_operand(shift_operand_temp), .two_src(two_src_out),
 	.reg_file_second_src_out(reg_file_second_src_out), .reg_file_first_src_out(reg_file_first_src_out),
 	.ignore_hazard_out(ignore_hazard_out));
 
-	assign src1_addr_middle = reg_file_first_src_out;
-	assign src2_addr_middle = reg_file_second_src_out;
+	assign src1_addr_temp = reg_file_first_src_out;
+	assign src2_addr_temp = reg_file_second_src_out;
 		
 	ID_stage_register ID_stage_reg(.clk(clk), .rst(rst), .flush(flush), .freeze(freeze), .pc_in(pc_middle), 
 	.mem_read_en_in(mem_read_en_middle), .mem_write_en_in(mem_write_en_middle), .wb_enable_in(wb_enable_middle),
 	.immediate_in(immediate_middle), .branch_taken_in(branch_taken_middle), .status_write_enable_in(status_write_enable_middle),
-	.execute_command_in(execute_command_middle), .reg_file_in1(reg_file_middle1),
-	.reg_file_in2(reg_file_middle2), .dest_reg_in(dest_reg_middle),
-	.signed_immediate_in(signed_immediate_middle), .shift_operand_in(shift_operand_middle),
-	.status_reg_in(status_reg_in), .src1_addr_in(src1_addr_middle), .src2_addr_in(src2_addr_middle), .pc_out(pc_out),			
+	.execute_command_in(execute_command_temp), .reg_file_in1(reg_file_temp1),
+	.reg_file_in2(reg_file_temp2), .dest_reg_in(dest_reg_temp),
+	.signed_immediate_in(signed_immediate_temp), .shift_operand_in(shift_operand_temp),
+	.status_reg_in(status_reg_in), .src1_addr_in(src1_addr_temp), .src2_addr_in(src2_addr_temp), .pc_out(pc_out),			
 	.mem_read_en_out(mem_read_en_out), .mem_write_en_out(mem_write_en_out), .wb_enable_out(wb_enable_out),
 	.immediate_out(immediate_out), .branch_taken_out(branch_taken_out),
 	.status_write_enable_out(status_write_enable_out), .execute_command_out(execute_command_out),
