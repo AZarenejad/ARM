@@ -1,13 +1,15 @@
-module ALU(input [31:0] alu_in1, alu_in2, input [3:0] alu_command, input cin, 
-        output wire [31:0] alu_out, output wire [3:0] status_register);
+module ALU(input [31:0] alu_in1, alu_in2, input cin, input[3:0] alu_command, 
+output wire[3:0] status_register, output wire [31:0] alu_out);
     
     wire z, n;
     reg v, cout;
+    reg [31:0] alu_out_temp;
+
     assign status_register = {z, cout, n, v};
     assign z = (alu_out == 8'b0 ? 1 : 0);
     assign n = alu_out[31];
-    reg [31:0] alu_out_temp;
     assign alu_out = alu_out_temp;
+    
 	always @(*) begin
 	    cout = 1'b0;
         v = 1'b0;

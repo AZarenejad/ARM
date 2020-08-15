@@ -1,7 +1,7 @@
-module condition_check (input [3:0] cond, input [3:0] status_register, output wire cond_state);
+module condition_check (input [3:0] cond, status_register, output wire cond_state);
 
     wire z, c, n, v;
-
+    
     // z ==> zero
     // c ==> carry
     // n ==> negative

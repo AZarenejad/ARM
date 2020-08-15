@@ -1,16 +1,14 @@
-module controller(input[1:0] mode, input[3:0] opcode, input s, immediate_in,
-        output wire[3:0] execute_command,
-        output wire mem_read, mem_write, wb_enable, immediate, branch_taken, status_write_enable, ignore_hazard);
+module controller(input[1:0] mode, input[3:0] opcode, input s, immediate_in, output wire[3:0] execute_command,
+        output wire branch_taken, status_write_enable, ignore_hazard, mem_read, mem_write, wb_enable, immediate);
 
+    reg [3:0] alu_cmd_reg;
+    reg mem_read_reg, mem_write_reg, wb_enable_reg, branch_taken_reg, status_write_enable_reg, ignore_hazard_reg;
    
-    reg mem_read_reg, mem_write_reg,
-            wb_enable_reg, branch_taken_reg, status_write_enable_reg, ignore_hazard_reg;
-    reg [3:0] execute_command_reg;
         
     assign immediate = immediate_in;
     assign status_write_enable = s;
     
-    assign execute_command = execute_command_reg;
+    assign execute_command = alu_cmd_reg;
     assign mem_read = mem_read_reg;
     assign mem_write = mem_write_reg;
     assign wb_enable = wb_enable_reg;
@@ -19,114 +17,48 @@ module controller(input[1:0] mode, input[3:0] opcode, input s, immediate_in,
 
     always @(mode, opcode, s) begin
 
-        mem_write_reg = 1'b0;
-        mem_read_reg = 1'b0;
         wb_enable_reg = 1'b0;
         branch_taken_reg = 1'b0;
         ignore_hazard_reg = 1'b0;
-        
-            case (mode)
-                // ARITHMETHIC_TYPE
-                2'b00 : begin
-                
-                    case(opcode)
-                        // MOV 
-                        4'b1101 : begin
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b0001;
-                            ignore_hazard_reg = 1'b1;
-                        end
+        mem_write_reg = 1'b0;
+        mem_read_reg = 1'b0;
 
-                        // MOVN
-                        4'b1111 : begin 
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b1001;
-                            ignore_hazard_reg = 1'b1;
-                        end
+        alu_cmd_reg = (mode == 2'b00 && opcode == 4'b1101) ? 4'b0001 : // MOV
+        (mode == 2'b00 && opcode == 4'b1111) ? 4'b1001 :  // MOVN
+        (mode == 2'b00 && opcode == 4'b0100) ? 4'b0010 : // ADD
+        (mode == 2'b00 && opcode == 4'b0101) ? 4'b0011 : // ADC
+        (mode == 2'b00 && opcode == 4'b0010) ? 4'b0100 : // SUB
+        (mode == 2'b00 && opcode == 4'b0110) ? 4'b0101 : // SBC
+        (mode == 2'b00 && opcode == 4'b0000) ? 4'b0110 : //AND
+        (mode == 2'b00 && opcode == 4'b1100) ? 4'b0111 :  // ORR
+        (mode == 2'b00 && opcode == 4'b0001) ? 4'b1000 : // EOR
+        (mode == 2'b00 && opcode == 4'b1010) ? 4'b1100 : // CMP
+        (mode == 2'b00 && opcode == 4'b1000) ? 4'b1110 : // TST
+        (mode == 2'b00 && opcode == 4'b0100) ? 4'b1010 : // LDR STR
+        (mode == 2'b01) ? 4'b0010 : 4'bz;
 
-                        // ADD
-                        4'b0100 : begin 
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b0010;
-                        end
 
-                        // ADC
-                        4'b0101 : begin 
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b0011;
-                        end
+        wb_enable_reg = ((mode == 2'b00 && opcode == 4'b1101) || // MOV
+        (mode == 2'b00 && opcode == 4'b1111) ||  // MOVN
+        (mode == 2'b00 && opcode == 4'b0100) || // ADD
+        (mode == 2'b00 && opcode == 4'b0101) || // ADC
+        (mode == 2'b00 && opcode == 4'b0010) || // SUB
+        (mode == 2'b00 && opcode == 4'b0110) || // SBC
+        (mode == 2'b00 && opcode == 4'b0000) || // AND
+        (mode == 2'b00 && opcode == 4'b1100) || // ORR
+        (mode == 2'b00 && opcode == 4'b0001) || //eor
+        (mode == 2'b01 && s == 1'b1)) ? 1'b1 : 1'b0;
 
-                        // SUB
-                        4'b0010 : begin
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b0100;
-                        end
+        mem_read_reg = (mode == 2'b01 && s == 1'b1) ? 1'b1 : 1'b0;
 
-                        // SBC
-                        4'b0110 : begin 
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b0101;
-                        end
+        mem_write_reg = (mode == 2'b01 && s == 1'b0) ? 1'b1 : 1'b0;
 
-                        // AND
-                        4'b0000 : begin 
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b0110;
-                        end
+        ignore_hazard_reg = ((mode == 2'b00 && opcode == 4'b1101) ||  // MOV
+        (mode == 2'b00 && opcode == 4'b1111) || // MOVN
+        (mode == 2'b10)) ? 1'b1 : 1'b0;
 
-                        // ORR
-                        4'b1100 : begin 
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b0111;
-                        end
-
-                        // EOR
-                        4'b0001 : begin 
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b1000;
-                        end
-
-                        // CMP
-                        4'b1010 :
-                            execute_command_reg = 4'b1100;
-
-                        // TST
-                        4'b1000 :
-                            execute_command_reg = 4'b1110;
-
-                        // LDR
-                        4'b0100 : begin 
-                            wb_enable_reg = 1'b1;
-                            execute_command_reg = 4'b1010;
-                        end
-
-                        // STR
-                        4'b0100 :
-                            execute_command_reg = 4'b1010;
-                endcase
-            end
-
-            // MEMORY_TYPE
-            2'b01 : begin
-                // ADD
-                execute_command_reg = 4'b0010;
-                case (s)
-                    1'b1 : begin
-                        mem_read_reg = 1'b1;
-                        wb_enable_reg = 1'b1;
-                    end
-                    1'b0 : begin
-                        mem_write_reg = 1'b1;
-                    end
-                endcase
-            end
-            
-            // BRANCH_TYPE
-            2'b10 : begin
-                branch_taken_reg = 1'b1;
-                ignore_hazard_reg = 1'b1;
-            end
-        endcase
+        branch_taken_reg = (mode == 2'b10) ? 1'b1 : 1'b0;
+ 
     end
     
 endmodule

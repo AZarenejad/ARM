@@ -1,7 +1,5 @@
 `timescale 1ns/1ns
 
-
-
 module test_bench();
     reg clk = 0, rst, en_forwarding;
 
