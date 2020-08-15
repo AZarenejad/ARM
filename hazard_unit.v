@@ -3,13 +3,13 @@ module hazard_detection_unit (input with_forwarding, input have_two_src, ignore_
     input exe_wb_en, mem_wb_en,  output hazard_detected);
     
     wire internal_hazard_with_forwarding;
-    wire internal_hazard_without_forwarding;
+    wire hazard_without_forwarding;
 
-    assign internal_hazard_with_forwarding = ((src1_address == exe_wb_dest) && (exe_wb_en == 1'b1)) ? 1'b1
+    assign hazard_with_forwarding = ((src1_address == exe_wb_dest) && (exe_wb_en == 1'b1)) ? 1'b1
             : ((src2_address == exe_wb_dest) && (exe_wb_en == 1'b1) && (have_two_src == 1'b1)) ? 1'b1
             : 1'b0;
 
-    assign internal_hazard_without_forwarding = ((src1_address == exe_wb_dest) && (exe_wb_en == 1'b1)) ? 1'b1
+    assign hazard_without_forwarding = ((src1_address == exe_wb_dest) && (exe_wb_en == 1'b1)) ? 1'b1
             : ((src1_address == mem_wb_dest) && (mem_wb_en == 1'b1)) ? 1'b1
             : ((src2_address == exe_wb_dest) && (exe_wb_en == 1'b1) && (have_two_src == 1'b1)) ? 1'b1
             : ((src2_address == mem_wb_dest) && (mem_wb_en == 1'b1) && (have_two_src == 1'b1)) ? 1'b1
@@ -17,6 +17,6 @@ module hazard_detection_unit (input with_forwarding, input have_two_src, ignore_
     
     // assign hazard_detected = internal_hazard & (~ignore_from_forwarding | EXE_mem_read_en);
     assign hazard_detected = (ignore_hazard == 1'b1) ? 1'b0
-        : (with_forwarding == 1'b1) ? internal_hazard_with_forwarding & EXE_mem_read_en
-        : internal_hazard_without_forwarding;
+        : (with_forwarding == 1'b1) ? hazard_with_forwarding & EXE_mem_read_en
+        : hazard_without_forwarding;
 endmodule
