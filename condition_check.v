@@ -14,6 +14,23 @@ module condition_check (input [3:0] cond, status_register, output wire cond_stat
 
     always @(*) begin
 
+        // temp_condition <= 1'b1;
+        // temp_condition <= (cond == 4'b0000) ? z : // COND_EQ
+        // (cond == 4'b0001) ? ~z : // COND_NE
+        // (cond == 4'b0010) ? c : // COND_CS_HS
+        // (cond == 4'b0011) ? ~c : // COND_CC_LO
+        // (cond == 4'b0100) ? n : // COND_MI
+        // (cond == 4'b0101) ? ~n : // COND_PL
+        // (cond == 4'b0110) ? v : // COND_VS
+        // (cond == 4'b0111) ? ~v : // COND_VC
+        // (cond == 4'b1000) ? c & ~z : // COND_HI
+        // (cond == 4'b1001) ?  ~c & z : // COND_LS
+        // (cond == 4'b1010) ? (n & v) | (~n & ~v) : // COND_GE
+        // (cond == 4'b1011) ? (n & ~v) | (~n & v) : // COND_LT
+        // (cond == 4'b1100) ?  ~z & ((n & v) | (~n & ~v)) : // COND_GT
+        // (cond == 4'b1101) ?  z | ((n & ~v) | (~n & v)) : // COND_LE
+        // (cond == 4'b1110) ? 1'b1 : temp_condition;
+
         case(cond)
             // COND_EQ
             4'b0000 : begin

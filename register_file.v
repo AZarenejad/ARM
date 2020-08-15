@@ -1,5 +1,4 @@
-module register_file(input clk, rst, input [3:0] src1, src2, dest_wb, input[31:0] result_wb,
-                    input write_back_en, output [31:0] reg1, reg2);
+module register_file(input clk, rst, write_back_en, input [3:0] src1, src2, dest_wb, input[31:0] result_wb, output[31:0] reg1, reg2);
                     
     integer counter = 0;
     reg[31:0] data[0:15];

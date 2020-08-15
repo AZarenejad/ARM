@@ -1,8 +1,6 @@
 
-module MEM_stage(input clk, rst, wb_en_in, mem_r_en_in, mem_w_en_in,
-	input [31:0] alu_res_in, val_Rm,
-	input [3:0] dest_in,
-	output wb_en_out, mem_r_en_out, ready, output [31:0] mem_out, alu_res_out, output [3:0] dest_out);
+module MEM_stage(input clk, rst, wb_en_in, mem_r_en_in, mem_w_en_in, input [31:0] alu_res_in, val_Rm,
+	input [3:0] dest_in, output wb_en_out, mem_r_en_out, ready, output [31:0] mem_out, alu_res_out, output [3:0] dest_out);
 	
 	assign wb_en_out = wb_en_in;
 	assign mem_r_en_out = mem_r_en_in;
@@ -16,10 +14,8 @@ endmodule
 
 
 module mem_stage_register(input clk, rst, freeze, wb_en_in, mem_r_en_in,
-	input [31:0] alu_res_in, mem_res_in,
-	input [3:0] dest_in,
-	output wb_en_out, mem_r_en_out, output [31:0] alu_res_out, mem_res_out , output [3:0] dest_out
-);
+	input [31:0] alu_res_in, mem_res_in, input [3:0] dest_in,
+	output wb_en_out, mem_r_en_out, output [31:0] alu_res_out, mem_res_out , output [3:0] dest_out);
 	
 	register #(.WORD_LENGTH(1)) mem_wb_reg_wb_en(.clk(clk), .rst(rst), .ld(~freeze), .in(wb_en_in), .out(wb_en_out));
 
@@ -34,7 +30,7 @@ module mem_stage_register(input clk, rst, freeze, wb_en_in, mem_r_en_in,
 endmodule
 
 
-module MEM_stage_module( input clk, rst, freeze, wb_en_in, mem_r_en_in, mem_w_en_in, input [31:0] alu_res_in, val_Rm,
+module MEM_stage_module(input clk, rst, freeze, wb_en_in, mem_r_en_in, mem_w_en_in, input [31:0] alu_res_in, val_Rm,
  						input [3:0] dest_in, output wb_en_out, mem_r_en_out, output [31:0] alu_res_out, mem_res_out,
 						output [3:0] dest_out, output wb_en_hazard_in, ready, output [3:0] dest_hazard_in);
 

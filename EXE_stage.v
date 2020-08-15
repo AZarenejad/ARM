@@ -1,13 +1,8 @@
-module EXE_stage(
-	input clk, rst, wb_en_in, mem_r_en_in, mem_w_en_in, status_w_en_in, branch_taken_in, immd,
-    input[31:0] pc_in, val_Rn, val_Rm_in, MEM_wb_value, WB_wb_value,
-	input [3:0] exe_cmd, dest_in, status_reg_in,
-	input [23:0] signed_immd_24,
-	input [11:0] shift_operand,
-	input [1:0] alu_mux_sel_src1, alu_mux_sel_src2,
+module EXE_stage(input clk, rst, wb_en_in, mem_r_en_in, mem_w_en_in, status_w_en_in, branch_taken_in, immd,
+    input[31:0] pc_in, val_Rn, val_Rm_in, MEM_wb_value, WB_wb_value, input [3:0] exe_cmd, dest_in, status_reg_in,
+	input [23:0] signed_immd_24, input [11:0] shift_operand, input [1:0] alu_mux_sel_src1, alu_mux_sel_src2,
 	output wb_en_out, mem_r_en_out, mem_w_en_out, status_w_en_out, branch_taken_out,
-	output [3:0] dest_out, status_register,
-	output [31:0] alu_res, val_Rm_out, branch_address);
+	output [3:0] dest_out, status_register, output [31:0] alu_res, val_Rm_out, branch_address);
 
 	wire is_mem_command;
 	wire [31:0] val2;
@@ -26,10 +21,8 @@ module EXE_stage(
 	adder #(.WORD_LENGTH(32)) adder(.in1(pc_in), .in2({signed_immd_24[23], signed_immd_24[23], signed_immd_24[23], signed_immd_24[23],
 			signed_immd_24[23], signed_immd_24[23],signed_immd_24, 2'b0}), .out(branch_address));	
 
-	// ####### ALU src 1 MUX #######
 	multiplexer_3_to_1 alu_src1_mux(.in1(val_Rn), .in2(WB_wb_value), .in3(MEM_wb_value), .sel(alu_mux_sel_src1), .out(alu_mux_src1));
 
-	// ####### Val2 Generator #######
 	multiplexer_3_to_1 alu_src2_mux(.in1(val_Rm_in), .in2(WB_wb_value), .in3(MEM_wb_value), .sel(alu_mux_sel_src2), .out(alu_mux_src2));
 	
 	Val2_generator val2_generator(.Rm(alu_mux_src2), .shift_operand(shift_operand), .immd(immd),
@@ -38,7 +31,6 @@ module EXE_stage(
 
 	assign val_Rm_out = alu_mux_src2;
 
-	// ####### ALU #######
 	ALU alu(.alu_in1(alu_mux_src1), .alu_in2(val2), .alu_command(exe_cmd), .cin(status_reg_in[2]),
 			.alu_out(alu_res), .status_register(status_register)
 	);
@@ -68,8 +60,6 @@ module EXE_stage_register(
 	register #(.WORD_LENGTH(1)) exe_mem_reg_branch_taken(.clk(clk), .rst(rst), .ld(~freeze), .in(branch_taken_in), .out(branch_taken_out));
 	
 endmodule
-
-
 
 module EXE_stage_module(input clk, rst, freeze, input[31:0] pc_in,
 	input wb_en_in, mem_r_en_in, mem_w_en_in, status_w_en_in, branch_taken_in, immd,

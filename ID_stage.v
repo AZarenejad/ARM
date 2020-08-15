@@ -1,14 +1,10 @@
-module ID_stage(input rst, clk, reg_file_wb_en, hazard, input[31:0] pc_in, instruction_in,
+module ID_stage(input rst, clk, reg_file_wb_en, hazard, input[31:0] pc_in, instruction_in, reg_file_wb_data,
 	input [3:0] status_register, reg_file_wb_address,
-	input [31:0] reg_file_wb_data,
-	output[31:0] pc,
+	output[31:0] pc, reg_file_out1, reg_file_out2,
 	output mem_read_en_out, mem_write_en_out, wb_enable_out, immediate_out, branch_taken_out,
 	status_write_enable_out, ignore_hazard_out, two_src,
-	output [3: 0] execute_command_out, dest_reg_out,
-	output [31:0] reg_file_out1, reg_file_out2,
-	output [23:0] signed_immediate,
-	output [11:0] shift_operand,
-	output wire [3:0] reg_file_second_src_out, reg_file_first_src_out
+	output [3: 0] execute_command_out, dest_reg_out, output [23:0] signed_immediate,
+	output [11:0] shift_operand, output wire [3:0] reg_file_second_src_out, reg_file_first_src_out
 );
 
 	wire[3: 0] execute_command;
@@ -125,15 +121,13 @@ endmodule
 
 
 module ID_stage_module(input clk, rst, flush, freeze, reg_file_wb_en, hazard,
-		input[31:0] pc_in, instruction_in, reg_file_wb_data,
-		input [3:0] status_reg_in, reg_file_wb_address,	
+		input[31:0] pc_in, instruction_in, reg_file_wb_data, input [3:0] status_reg_in, reg_file_wb_address,	
 		output wire two_src_out, ignore_hazard_out,
 		output wire [3:0] reg_file_second_src_out, reg_file_first_src_out, execute_command_out, dest_reg_out, status_reg_out,
 		output wire [3:0] staged_reg_file_second_src_out, staged_reg_file_first_src_out,
 		output wire [31:0] pc_out, reg_file_out1, reg_file_out2,
 		output wire mem_read_en_out, mem_write_en_out, wb_enable_out, immediate_out, branch_taken_out, status_write_enable_out,
-		output wire [23:0] signed_immediate_out,
-		output wire [11:0] shift_operand_out);
+		output wire [23:0] signed_immediate_out, output wire [11:0] shift_operand_out);
 	
 	wire[31:0] pc_middle;
 
